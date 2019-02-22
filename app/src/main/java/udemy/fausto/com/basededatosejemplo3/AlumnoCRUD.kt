@@ -3,9 +3,11 @@ package udemy.fausto.com.basededatosejemplo3
 import android.content.ContentValues
 import android.content.Context
 import android.database.Cursor
+import android.database.sqlite.SQLiteDatabase
 
 class AlumnoCRUD (context: Context){
     private var helper: DataBaseHelper? = null
+
     init {
         helper = DataBaseHelper(context)
     }
@@ -68,6 +70,7 @@ class AlumnoCRUD (context: Context){
 
         val db = helper?.readableDatabase!!
 
+
         val columnas = arrayOf(AlumnosContract.Companion.Entrada.COLUMNA_ID, AlumnosContract.Companion.Entrada.COLUMNA_NOMBRE)
 
         val c: Cursor = db.query(
@@ -90,7 +93,32 @@ class AlumnoCRUD (context: Context){
 
     }
 
+    fun updateAlumno(item: Alumno) {
+        val db = helper?.writableDatabase!!
 
+        val values = ContentValues()
+        values.put(AlumnosContract.Companion.Entrada.COLUMNA_ID, item.id)
+        values.put(AlumnosContract.Companion.Entrada.COLUMNA_NOMBRE, item.name)
+
+        db.update(AlumnosContract.Companion.Entrada.NOMBRE_TABLA, values, "id = ?",
+            arrayOf(item.id)
+            )
+        db.close()
+
+
+    }
+
+    fun deleteAlumno(item: Alumno) {
+        val db: SQLiteDatabase = helper?.writableDatabase!!
+        db.delete(AlumnosContract.Companion.Entrada.NOMBRE_TABLA, "id = ?", arrayOf(item.id) )
+
+        db.close()
+
+
+
+
+
+    }
 
 
 }
